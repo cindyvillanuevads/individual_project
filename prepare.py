@@ -14,6 +14,7 @@ warnings.filterwarnings("ignore")
 
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
+from sklearn.impute import SimpleImputer
 
 
 
@@ -53,7 +54,12 @@ def miss_dup_values(df):
 
 def split_data(df, target):
     '''
-    take in a DataFrame and return train, validate, and test DataFrames; stratify on churn.
+        This function takes in a dataframe, the name of the target variable
+    (for stratification purposes), and an integer for a setting a seed
+    and splits the data into train, validate and test. 
+    Test is 20% of the original dataset, validate is .30*.80= 24% of the 
+    original dataset, and train is .70*.80= 56% of the original dataset. 
+    The function returns, in this order, train, validate and test dataframes
     
     '''
     train_validate, test = train_test_split(df, test_size=.2, random_state=123, stratify=df[target])
@@ -69,3 +75,48 @@ def split_data(df, target):
     print(f'test -> {test.shape}')
 
     return train, validate, test
+
+
+def impute_mode(train, validate, test):
+    '''
+    take in train, validate, and test DataFrames, impute mode for 'loanamount',
+    and return train, validate, and test DataFrames
+    '''
+    imputer = SimpleImputer(missing_values = np.nan, strategy='mean')
+    train[['loanamount']] = imputer.fit_transform(train[['loanamount']])
+    validate[['loanamount']] = imputer.transform(validate[['loanamount']])
+    test[['loanamount']] = imputer.transform(test[['loanamount']])
+    return train, validate, test
+
+
+# plot distributions
+def distribution (df):
+    '''
+    takes in a df and plot individual variable distributions excluding object type
+    '''
+
+    cols =df.columns.to_list()
+    for col in cols:
+        if df[col].dtype != 'object':
+            plt.hist(df[col])
+            plt.title(f'Distribution of {col}')
+            plt.xlabel('values')
+            plt.ylabel('Counts of customers')
+            plt.show()
+
+
+
+
+def distribution_boxplot (df):
+    '''
+    takes in a df and boxplot variable distributions excluding object type
+    '''
+    cols =df.columns.to_list()
+    for col in cols:
+        if df[col].dtype != 'object':
+            plt.figure(figsize=(8, 6))
+            sns.boxplot(x= col, data=df)
+            plt.title(f'Distribution of {col}')
+            plt.xlabel('values')
+            plt.show()
+    return
