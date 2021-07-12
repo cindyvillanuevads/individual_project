@@ -108,19 +108,7 @@ def distribution (df):
 
 
 
-def distribution_boxplot (df):
-    '''
-    takes in a df and boxplot variable distributions excluding object type
-    '''
-    cols =df.columns.to_list()
-    for col in cols:
-        if df[col].dtype != 'object':
-            plt.figure(figsize=(8, 6))
-            sns.boxplot(x= col, data=df)
-            plt.title(f'Distribution of {col}')
-            plt.xlabel('values')
-            plt.show()
-    return
+
 
 
 def scaled_df ( train_df , validate_df, test_df,columns,  scaler):
@@ -197,3 +185,70 @@ def split_Xy (train, validate, test, target):
     print(f'X_validate -> {X_validate.shape}         y_validate->{y_validate.shape} ')        
     print(f'X_test -> {X_test.shape}                  y_test>{y_test.shape}') 
     return  X_train, y_train, X_validate, y_validate, X_test, y_test
+
+
+# ************************* acquire _clean() *************************
+
+def aquire_clean ():
+    '''
+    this functions read df1_loan.csv and clean the df. renames columns, chanfe type of columns, fill missing values
+    create dummies and creates new columns
+    
+    return df
+    '''
+    #read the file that is  already in my directory
+    df = pd.read_csv('df1_loan.csv')
+    #drop unnamed column
+    df = df.drop(columns= ['Unnamed: 0'])
+    #rename columns (lowercase)
+    df.columns = map(str.lower, df.columns)
+    #change total_income to float
+    df['total_income']= df.total_income.replace({'\$':''}, regex = True).astype('float')
+    #change type in dependents
+    df['dependents']= df.dependents.replace({'\+':''}, regex = True).astype('float')
+    #fill missing values of the columns with 0
+    df[['credit_history','self_employed','dependents', 'married']] =df[['credit_history','self_employed','dependents', 'married']].fillna(0)
+    #fill  missing values of gender
+    df.gender.fillna('Male', inplace = True)
+    #fill  missing values of loan_amount_term
+    df.loan_amount_term.fillna(360, inplace = True)
+    #loanamount values are thousands 
+    df['loanamount'] = df.loanamount * 1000
+    # encode yes/no columns : loan_status, self_employed, married
+    df[['loan_status', 'self_employed', 'married']] = df[['loan_status', 'self_employed', 'married']].replace({'Yes': 1, 'No': 0, 'Y': 1, 'N': 0})
+    #encode gender female = 0 , male = 1
+    df.gender.replace({'Male': 1, 'Female': 0}, inplace = True)
+    #create dummies
+    dummy_df = pd.get_dummies(df[['education','property_area']])
+    #lowercase the columns
+    dummy_df.columns = map(str.lower, dummy_df.columns)
+    #concat 2dfs
+    df = pd.concat([df, dummy_df], axis=1).drop(columns = ['education', 'property_area','education_not graduate'])
+    #create a new columns
+    df['has_coapplicant'] = 0 
+    #fill new column with 1 for that condition
+    df.loc[df.coapplicantincome > 0, ['has_coapplicant']] = 1
+    #  total_income divide by  dependents +1(applicant)
+    df['income_portion_dependents'] = df.total_income/ (df.dependents +1) 
+    
+    return df
+
+# ************************* split_and_scaled() *************************
+
+def split_and_scaled (df, cols_tobe_scaled, scaler ):
+    '''
+    takes in a df, a list of columns to be scaled, and a scale type. split df into train, validate and test.
+    scale the selected columns using the selected scale.
+    returns train, validate, test, train_scaled, validate_scaled, test_scaled
+    df: dataframe
+    cols_tobe_scaled : [ 'applicantincome', 'coapplicantincome', 'loanamount','loan_amount_term', 'total_income', 'income_portion_dependents']
+    scaler : MinMaxScaler() or RobustScaler(), StandardScaler()
+    Example
+    split_and_scaled (df1, cols_tobe_scaled, RobustScaler())
+    '''
+    #using my function that is in prepare.py
+    train, validate, test = split_data(df, 'loan_status')
+    #using a function to impute the mean
+    train, validate, test = impute_mode(train, validate, test)
+    train_scaled, validate_scaled, test_scaled = scaled_df(train, validate, test, cols_tobe_scaled , scaler)
+    return (train, validate, test, train_scaled, validate_scaled, test_scaled)  
