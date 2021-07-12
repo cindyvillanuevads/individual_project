@@ -15,6 +15,7 @@ warnings.filterwarnings("ignore")
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.impute import SimpleImputer
+from sklearn.preprocessing import MinMaxScaler, RobustScaler, StandardScaler
 
 
 
@@ -120,3 +121,49 @@ def distribution_boxplot (df):
             plt.xlabel('values')
             plt.show()
     return
+
+
+def scaled_df ( train_df , validate_df, test_df,columns,  scaler):
+    '''
+    Take in a 3 df and a type of scaler that you  want to  use. it will scale all columns
+    except object type. Fit a scaler only in train and tramnsform in train, validate and test.
+    returns  new dfs with the scaled columns.
+    scaler : MinMaxScaler() or RobustScaler(), StandardScaler() 
+    Example:
+    scaled_df( X_train , X_validate , X_test, RobustScaler())
+    
+    '''
+    
+    # fit our scaler
+    scaler.fit(train_df[columns])
+    # get our scaled arrays
+    train_scaled = scaler.transform(train_df[columns])
+    validate_scaled= scaler.transform(validate_df[columns])
+    test_scaled= scaler.transform(test_df[columns])
+
+    # convert arrays to dataframes
+    train_scaled_df = pd.DataFrame(train_scaled, columns=columns).set_index([train_df.index.values])
+    validate_scaled_df = pd.DataFrame(validate_scaled, columns=columns).set_index([validate_df.index.values])
+    test_scaled_df = pd.DataFrame(test_scaled, columns=columns).set_index([test_df.index.values])
+
+    #add the columns that are not scaled
+    train_scaled_df = pd.concat([train_scaled_df, train_df.drop(columns = columns) ], axis= 1 )
+    validate_scaled_df = pd.concat([validate_scaled_df, validate_df.drop(columns = columns) ], axis= 1 )
+    test_scaled_df = pd.concat([test_scaled_df, test_df.drop(columns = columns) ], axis= 1 )
+    #plot
+    for col in columns: 
+        plt.figure(figsize=(13, 6))
+        plt.subplot(121)
+        plt.hist(train_df[col], ec='black')
+        plt.title('Original')
+        plt.xlabel(col)
+        plt.ylabel("counts")
+        plt.subplot(122)
+        plt.hist(train_scaled_df[col],  ec='black')
+        plt.title('Scaled')
+        plt.xlabel(col)
+        plt.ylabel("counts")
+
+
+
+    return train_scaled_df, validate_scaled_df, test_scaled_df
