@@ -167,3 +167,33 @@ def scaled_df ( train_df , validate_df, test_df,columns,  scaler):
 
 
     return train_scaled_df, validate_scaled_df, test_scaled_df
+
+
+
+
+
+
+def split_Xy (train, validate, test, target):
+    '''
+    This function takes in three dataframe (train, validate, test) and a target  and splits each of the 3 samples
+    into a dataframe with independent variables and a series with the dependent, or target variable.
+    The function returns 3 dataframes and 3 series:
+    X_train (df) & y_train (series), X_validate & y_validate, X_test & y_test.
+    Example:
+    X_train, y_train, X_validate, y_validate, X_test, y_test = split_Xy (train, validate, test, 'Fertility' )
+    '''
+    
+    #split train
+    X_train = train.drop(columns= [target])
+    y_train= train[target]
+    #split validate
+    X_validate = validate.drop(columns= [target])
+    y_validate= validate[target]
+    #split validate
+    X_test = test.drop(columns= [target])
+    y_test= test[target]
+
+    print(f'X_train -> {X_train.shape}               y_train->{y_train.shape}')
+    print(f'X_validate -> {X_validate.shape}         y_validate->{y_validate.shape} ')        
+    print(f'X_test -> {X_test.shape}                  y_test>{y_test.shape}') 
+    return  X_train, y_train, X_validate, y_validate, X_test, y_test
