@@ -20,7 +20,6 @@ def select_rfe (X_df, y_df, n_features, method):
     '''
     Takes in the predictors, the target, and the number of features to select (k) ,
     and returns the names of the top k selected features based on the Recursive Feature Elimination (RFE)
-    
     X_df : the predictors
     y_df : the target
     n_features : the number of features to select (k)
@@ -38,7 +37,7 @@ def select_rfe (X_df, y_df, n_features, method):
 
 def select_kbest  (X_df, y_df, n_features):
     '''
-    Takes in the predictors, the target, and the number of features to select (k) ,
+    Takes in the predictors, the target, and the number of features to select (k),
     and returns the names of the top k selected features based on the SelectKBest class
     
     X_df : the predictors
@@ -116,101 +115,3 @@ def model_performs (X_df, y_df, model):
    
 
 
-def compare (model1, model2, X_df1,X_df2, y_df):
-    '''
-    Take in two models to compare their performance metrics.
-    X_df: train, validate or  test. Select one
-    y_df: it has to be the same as X_df.
-    model1: name of your first model that you want to compare  
-    model2: name of your second model that you want to compare
-    Example: 
-    compare(logit2, logit4, X_validate, y_validate)
-    '''
-
-
-
-    #prediction
-    pred1 = model1.predict(X_df1)
-    pred2 = model2.predict(X_df2)
-
-    #score = accuracy
-    acc1 = model1.score(X_df1, y_df)
-    acc2 = model2.score(X_df2, y_df)
-
-
-    #conf Matrix
-    #model 1
-    conf1 = confusion_matrix(y_df, pred1)
-    mat1 =  pd.DataFrame ((confusion_matrix(y_df, pred1 )),index = ['actual_no_churn','actual_churn'], columns =['pred_no_churn','pred_churn' ])
-    rubric_df = pd.DataFrame([['True Negative', 'False positive'], ['False Negative', 'True Positive']], columns=mat1.columns, index=mat1.index)
-    cf1 = rubric_df + ': ' + mat1.values.astype(str)
-    
-    #model2
-    conf2 = confusion_matrix(y_df, pred2)
-    mat2 =  pd.DataFrame ((confusion_matrix(y_df, pred2 )),index = ['actual_no_churn','actual_churn'], columns =['pred_no_churn','pred_churn' ])
-    cf2 = rubric_df + ': ' + mat2.values.astype(str)
-    #model 1
-    #assign the values
-    tp = conf1[1,1]
-    fp =conf1[0,1] 
-    fn= conf1[1,0]
-    tn =conf1[0,0]
-
-    #calculate the rate
-    tpr1 = tp/(tp+fn)
-    fpr1 = fp/(fp+tn)
-    tnr1 = tn/(tn+fp)
-    fnr1 = fn/(fn+tp)
-
-    #model 2
-    #assign the values
-    tp = conf2[1,1]
-    fp =conf2[0,1] 
-    fn= conf2[1,0]
-    tn =conf2[0,0]
-
-    #calculate the rate
-    tpr2 = tp/(tp+fn)
-    fpr2 = fp/(fp+tn)
-    tnr2 = tn/(tn+fp)
-    fnr2 = fn/(fn+tp)
-
-    #classification report
-    #model1
-    clas_rep1 =pd.DataFrame(classification_report(y_df, pred1, output_dict=True)).T
-    clas_rep1.rename(index={'0': "no_churn", '1': "churn"}, inplace = True)
-
-    #model2
-    clas_rep2 =pd.DataFrame(classification_report(y_df, pred2, output_dict=True)).T
-    clas_rep2.rename(index={'0': "no_churn", '1': "churn"}, inplace = True)
-    print(f'''
-    ******       Model 1  ******                                ******     Model 2  ****** 
-    The accuracy for our model 1 is {acc1:.4%}            |   The accuracy for our model 2 is {acc2:.4%}  
-                                                        |
-    The True Positive Rate is {tpr1:.3%}                   |   The True Positive Rate is {tpr2:.3%}  
-    The False Positive Rate is {fpr1:.3%}                  |   The False Positive Rate is {fpr2:.3%} 
-    The True Negative Rate is {tnr1:.3%}                   |   The True Negative Rate is {tnr2:.3%} 
-    The False Negative Rate is {fnr1:.3%}                  |   The False Negative Rate is {fnr2:.3%}
-    _____________________________________________________________________________________________________________
-    ''')
-    print('''
-    The positive is  'churn'
-    Confusion Matrix
-    ''')
-    cf1_styler = cf1.style.set_table_attributes("style='display:inline'").set_caption('Model 1')
-    cf2_styler = cf2.style.set_table_attributes("style='display:inline'").set_caption('Model2')
-    space = "\xa0" * 50
-    display_html(cf1_styler._repr_html_()+ space  + cf2_styler._repr_html_(), raw=True)
-    # print(display(cf1),"           ", display(cf2))
-    
-    print('''
-    ________________________________________________________________________________
-    
-    Classification Report:
-    ''')
-     
-    clas_rep1_styler = clas_rep1.style.set_table_attributes("style='display:inline'").set_caption('Model 1 Classification Report')
-    clas_rep2_styler = clas_rep2.style.set_table_attributes("style='display:inline'").set_caption('Model 2 Classification Report')
-    space = "\xa0" * 45
-    display_html(clas_rep1_styler._repr_html_()+ space  + clas_rep2_styler._repr_html_(), raw=True)
-   
