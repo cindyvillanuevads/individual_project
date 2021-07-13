@@ -108,14 +108,14 @@ def distribution (df):
 
 
 
-def scaled_df ( train_df , validate_df, test_df,columns,  scaler):
+def scaled_df ( train_df , validate_df, test_df, columns,  scaler):
     '''
     Take in a 3 df and a type of scaler that you  want to  use. it will scale all columns
     except object type. Fit a scaler only in train and tramnsform in train, validate and test.
     returns  new dfs with the scaled columns.
     scaler : MinMaxScaler() or RobustScaler(), StandardScaler() 
     Example:
-    scaled_df( X_train , X_validate , X_test, RobustScaler())
+    scaled_df( X_train , X_validate , X_test, columns , RobustScaler())
     
     '''
     
