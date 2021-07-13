@@ -1,9 +1,10 @@
 ### PROJECT DESCRIPTION
 
-Finance companies deals with some kinds of home loans. Customer first applies for home loan and after that company validates the customer eligibility for loan. 
-Companies want to automate the loan eligibility process (real time).
 
-I created a classification model that predicts loan status based on customer details provided while filling online application form.  These details are Gender, Marital Status, Education, Number of Dependents, Income, Loan Amount, Credit History and others.  As my target is categorical (loan_status : approved or not approved) I utilized a binary classification predictive modeling. In order to create a model, I cleaned my data and decided how to handle missing values, created new columns, scaled my data, and explored my data. My best model (KNN) performed better than my baseline. 
+Finance companies deal with many types of home loans. The customer first applies for home loan, after that the finance company validates the customer eligibility for loan. These companies are looking to automate the loan eligibility process (real time).
+I used the classification methodology that predicts the loan status based on customer information provided while completing the online application. The details included are Gender, Marital Status, Education, Number of Dependents, Income, Loan Amount, Credit History and others. As my target is categorical (loan_status : approved or not approved), I utilized a binary classification predictive model. In order to create the model, I cleaned my data and decided how to handle missing values, created new columns, scaled my data, and explored my data. My best model (KNN) performed better than my baseline.
+
+
 
 ### GOALS 
 
