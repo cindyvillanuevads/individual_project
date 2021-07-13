@@ -1,15 +1,14 @@
 ### PROJECT DESCRIPTION
 
-Finance companies deals with some kinds of home loans. Customer first applies for home loan and after that company validates the customer eligibility for loan. Using the data from Kaggel 
-
+Finance companies deals with some kinds of home loans. Customer first applies for home loan and after that company validates the customer eligibility for loan. 
 Companies want to automate the loan eligibility process (real time).
 
-I created a classification model that predicts loan status based on customer details provided while filling online application form.  These details are Gender, Marital Status, Education, Number of Dependents, Income, Loan Amount, Credit History and others
+I created a classification model that predicts loan status based on customer details provided while filling online application form.  These details are Gender, Marital Status, Education, Number of Dependents, Income, Loan Amount, Credit History and others.  As my target is categorical (loan_status : approved or not approved) I utilized a binary classification predictive modeling. In order to create a model, I cleaned my data and decided how to handle missing values, created new columns, scaled my data, and explored my data. My best model (KNN) performed better than my baseline. 
 
 ### GOALS 
 
-- find drivers for loan approval
-- Constuct a ML a ML  model that accurately predicts loan approval (in this case is a classification model because the target is categorical)
+- find drivers for loan_status
+- Constuct a ML  model that accurately predicts loan approval.
 
 
 ### DATA DICTIONARY
@@ -54,8 +53,8 @@ ___
 
 
 ### INITIAL IDEAS/ HYPOTHESES STATED
-- 𝐻𝑜 : 
-- 𝐻𝑎 : 
+- 𝐻𝑜 : Rate of loan_status approval is not dependent on loan_amount_term.
+- 𝐻𝑎 : Rate of loan_status approval is dependent on loan_amount_term
 
 ### INSTRUCTIONS FOR RECREATING PROJECT
 
