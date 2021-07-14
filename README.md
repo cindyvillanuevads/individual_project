@@ -13,7 +13,7 @@ I used the classification methodology that predicts the loan status based on cus
 ### GOALS 
 
 - find drivers for loan_status
-- Constuct a ML  model that accurately predicts loan approval.
+- Constuct a ML  model that accurately predicts loan status.
 
 
 ### DATA DICTIONARY
@@ -29,7 +29,7 @@ I used the classification methodology that predicts the loan status based on cus
 |coapplicantincome | coapplicant income | float64 | dollars
 |loanamount | loan amount| float64 | dollars |
 |loan_amount_term | Term of loan| float64 | months|
-|credit_history | credit history meets guidelines |  0= No, 1 + Yes |
+|credit_history | credit history meets guidelines | uint8 | 0= No, 1 + Yes |
 |total_income | the sum of applicant and coapplicant income| float64| dollars|
 |education_graduate | graduated applicant | uint8 |  0= No, 1 + Yes |
 |property_area_rural | rural area |uint8 |  0= No, 1 + Yes |
@@ -37,7 +37,7 @@ I used the classification methodology that predicts the loan status based on cus
 |property_area_urban | urban area |uint8 |  0= No, 1 + Yes |
 |has_coapplicant | loan has a coapplicant | int64 | 0= No, 1 + Yes |
 |income_portion_dependents | totalincome divided by dependents +1 | float64 | dollars|
-|**loan_status** | loan approved| int64 |0= No, 1 + Yes | 
+|**loan_status** | loan status| int64 |0= No, 1 + Yes | 
 ___
 
 
@@ -64,7 +64,7 @@ ___
 ### INSTRUCTIONS FOR RECREATING PROJECT
 
 - [x] Read this README.md
-- [ ] Download the csv file from [Kaggle](https://www.kaggle.com/vipin20/loan-application-data) and save it in the same directory where are you goint to recreate the poject.
+- [ ] Download the csv file from [Kaggle](https://www.kaggle.com/vipin20/loan-application-data) and save it in the same directory where  you are going to recreate the poject.
 - [ ] Download the aquire.py, prepare.py, model.py, explore.py and  final_notebook_project.ipynb into your working directory
 - [ ] Run the final_notebook_project.ipynb notebook
 
